@@ -127,8 +127,7 @@ if (SERVER) then
 							
 						end
 						
-					end)
-													
+					end)												
 					
 				elseif ply:Armor() > 0 then
 				
@@ -151,11 +150,8 @@ if (SERVER) then
 					end)
 				
 				end							
-														
-				
-			end
-			
-			
+																		
+			end					
 			
 		elseif hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH then
 			
@@ -185,8 +181,7 @@ if (SERVER) then
 					else									
 						
 					end							
-														
-				
+																		
 				end
 				
 		end
@@ -205,7 +200,6 @@ if (SERVER) then
 	end
 
 	timer.Simple( 1 , CSGO_S_HOOKS )
-
 
 end
 
