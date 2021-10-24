@@ -100,7 +100,8 @@ if (SERVER) then
 	end
 
 	function CSGO_S_PLAYER_SHOTS( ply , hitgroup , dmginfo )
-		if not IsValid( ply ) then return end
+		if not IsValid( ply ) then return 
+		end
 		
 		local attacker					=	dmginfo:GetAttacker()
 		
@@ -154,42 +155,41 @@ if (SERVER) then
 				
 			end
 			
-			elseif hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH then
 			
-			if attacker:IsPlayer() == true or attacker:IsNPC() == true then
-				
-				if ply:Armor() > 0 then
-					local particleSound		=	ents.Create( "env_spark" )
-					local randomizer = math.random( 1 , 5 )
+			
+		elseif hitgroup == HITGROUP_CHEST or hitgroup == HITGROUP_STOMACH then
+			
+				if attacker:IsPlayer() == true or attacker:IsNPC() == true then
 					
-					particleSound:SetPos( dmginfo:GetDamagePosition() )
-					particleSound:Spawn()
-					ParticleEffect( "blood_impact_headshot_1" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)	
-					particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 80 , 100 , 1 )	
-					
-					print("bodyshot random " .. randomizer )
-					
-					timer.Simple( 0.05 , function()
+					if ply:Armor() > 0 then
+						local particleSound		=	ents.Create( "env_spark" )
+						local randomizer = math.random( 1 , 5 )
 						
-						if IsValid( particleSound ) then
-							
-							particleSound:Remove()
-							
-						end
+						particleSound:SetPos( dmginfo:GetDamagePosition() )
+						particleSound:Spawn()
+						ParticleEffect( "blood_impact_headshot_1" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)	
+						particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 80 , 100 , 1 )	
 						
-					end)
-					
-				else
-					
-					
-					
-				end							
+						print("bodyshot random " .. randomizer )
+						
+						timer.Simple( 0.05 , function()
+							
+							if IsValid( particleSound ) then
+								
+								particleSound:Remove()
+								
+							end
+							
+						end)
+						
+					else									
+						
+					end							
 														
 				
-			end
-			
+				end
+				
 		end
-		
 		
 	end
 
