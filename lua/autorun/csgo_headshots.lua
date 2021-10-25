@@ -5,7 +5,8 @@ AddCSLuaFile();
 if (SERVER) then 
 
 	function CSGO_S_NPC_HELMET_HEADSHOT( ent , hitgroup , dmginfo )
-		if not IsValid( ent ) then return end
+		if not IsValid( ent ) or ent:IsPlayer() == true or csgo_s_enable:GetInt() == 0  then return 
+		end
 		
 		local attacker					=	dmginfo:GetAttacker()
 		local plyangle					=	attacker:GetAngles()
@@ -16,7 +17,7 @@ if (SERVER) then
 			if not IsValid( attacker ) or attacker:IsPlayer() == true or attacker:IsNPC()  == true then
 													
 				ParticleEffect( "impact_helmet_headshot_csgo" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)																
-				ent:EmitSound( "headshot_csgo/headshot_csgo.wav" , 80 , 100 , 0.4 )				
+				ent:EmitSound( "headshot_csgo/headshot_csgo.wav" , 75 , 100 , csgo_s_volume_helmet:GetFloat() )				
 								
 			end
 			
@@ -25,7 +26,8 @@ if (SERVER) then
 	end
 	
 	function CSGO_S_NPC_COMBINE_BODYSHOT( ent , hitgroup , dmginfo )
-		if not IsValid( ent ) or ent:IsPlayer() == true then return end
+		if not IsValid( ent ) or ent:IsPlayer() == true or csgo_s_enable:GetInt() == 0 then return 
+		end
 		
 		local attacker					=	dmginfo:GetAttacker()
 		local plyangle					=	attacker:GetAngles()
@@ -43,7 +45,7 @@ if (SERVER) then
 						
 						particleSound:SetPos( dmginfo:GetDamagePosition() )
 						particleSound:Spawn()					
-						particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 80 , 100 , 0.85 )	
+						particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 75 , 100 , csgo_s_volume_bodyshot_kevlar:GetFloat() )	
 						
 						print("bodyshot random " .. randomizer )
 						
@@ -67,7 +69,8 @@ if (SERVER) then
 
 	function CSGO_S_ON_NPC_KILL_HEADSHOT( target , hitgroup , dmginfo )
 
-		if target:IsPlayer() == true then return end
+		if not IsValid( target ) or target:IsPlayer() == true or csgo_s_enable:GetInt() == 0 then return 
+		end
 		
 		local attacker				=	dmginfo:GetAttacker()
 		
@@ -90,7 +93,7 @@ if (SERVER) then
 				if dmginfo:GetDamage()*2 >= target:Health() then
 				
 					local randomizer = math.random( 1 , 2 )
-					target:EmitSound( "headshot_csgo/headshot_nohelm" .. randomizer .. ".wav" , 80 , 100 , 1 )	
+					target:EmitSound( "headshot_csgo/headshot_nohelm" .. randomizer .. ".wav" , 75 , 100 , csgo_s_volume_headshot_kill:GetFloat() )	
 					-- print( "nohelm randomizer " .. randomizer )	
 					
 				end
@@ -102,7 +105,7 @@ if (SERVER) then
 	end
 
 	function CSGO_S_PLAYER_SHOTS( ply , hitgroup , dmginfo )
-		if not IsValid( ply ) then return 
+		if not IsValid( ply ) or csgo_s_enable:GetInt() == 0 then return 
 		end
 		
 		local attacker					=	dmginfo:GetAttacker()
@@ -119,7 +122,7 @@ if (SERVER) then
 					particleSound:SetPos( dmginfo:GetDamagePosition() )
 					particleSound:Spawn()
 					ParticleEffect( "blood_impact_headshot_1" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)	
-					particleSound:EmitSound( "headshot_csgo/headshot_nohelm" .. randomizer .. ".wav" , 80 , 100 , 1 )	
+					particleSound:EmitSound( "headshot_csgo/headshot_nohelm" .. randomizer .. ".wav" , 75 , 100 , csgo_s_volume_headshot_noarmor:GetFloat() )	
 					
 					timer.Simple( 0.05 , function()
 						
@@ -139,7 +142,7 @@ if (SERVER) then
 					particleSound:SetPos( dmginfo:GetDamagePosition() )
 					particleSound:Spawn()
 					ParticleEffect( "impact_helmet_headshot_csgo" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)	
-					particleSound:EmitSound( "headshot_csgo/headshot_csgo.wav" , 80 , 100 , 0.4 )	
+					particleSound:EmitSound( "headshot_csgo/headshot_csgo.wav" , 75 , 100 , csgo_s_volume_helmet:GetFLoat() )	
 					
 					timer.Simple( 0.05 , function()
 						
@@ -166,7 +169,7 @@ if (SERVER) then
 						particleSound:SetPos( dmginfo:GetDamagePosition() )
 						particleSound:Spawn()
 						ParticleEffect( "blood_impact_headshot_1" , dmginfo:GetDamagePosition(), Angle(plyangle), nil)	
-						particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 80 , 100 , 1 )	
+						particleSound:EmitSound( "bodyshot_csgo/kevlar" .. randomizer .. ".wav" , 75 , 100 , csgo_s_volume_bodyshot_kevlar:GetFloat() )	
 						
 						print("bodyshot random " .. randomizer )
 						
@@ -206,9 +209,36 @@ if (SERVER) then
 end
 
 CreateConVar("csgo_s_enable" , "1" , "","", "0" , "1")
-csgo_s_enable = GetConVar("csgo_s_enable")
+CreateConVar("csgo_s_volume_helmet" , "0.45" , "","", "0" , "1")
+CreateConVar("csgo_s_volume_headshot_noarmor" , "1" , "","", "0" , "1")
+CreateConVar("csgo_s_volume_headshot_kill" , "1" , "","", "0" , "1")
+CreateConVar("csgo_s_volume_bodyshot_kevlar" , "1" , "","", "0" , "1")
+
+csgo_s_enable 					= GetConVar("csgo_s_enable")
+csgo_s_volume_helmet			= GetConVar("csgo_s_volume_helmet")
+csgo_s_volume_headshot_noarmor	= GetConVar("csgo_s_volume_headshot_noarmor")
+csgo_s_volume_headshot_kill		= GetConVar("csgo_s_volume_headshot_kill")
+csgo_s_volume_bodyshot_kevlar	= GetConVar("csgo_s_volume_bodyshot_kevlar")
 
 
+if ( CLIENT ) then
+
+	hook.Add( "PopulateToolMenu", "CustomFASSettings", function()
+
+		spawnmenu.AddToolMenuOption( "Options", "CSGO FX","Froze_Menu","CSGO Shot FX", "","", function( panel ) 
+		panel:CheckBox( "Enable CSGO Shot FX" , "csgo_s_enable" )
+		panel:NumSlider( "Helmet Spark Volume", "csgo_s_volume_helmet", 0, 1 )
+		panel:NumSlider( "Headshot Player No Armor Volume", "csgo_s_volume_headshot_noarmor", 0, 1 )
+		panel:NumSlider( "Headshot Kill Volume", "csgo_s_volume_headshot_kill", 0, 1 )
+		panel:NumSlider( "Kevlar Bodyshot Volume", "csgo_s_volume_bodyshot_kevlar", 0, 1 )
+		
+		end)
+
+	end )
+	
+	print("ogey toolbear")
+
+end
 
 
 
