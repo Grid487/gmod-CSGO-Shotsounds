@@ -205,7 +205,8 @@ if (SERVER) then
 
 end
 
-
+CreateConVar("csgo_s_enable" , "1" , "","", "0" , "1")
+csgo_s_enable = GetConVar("csgo_s_enable")
 
 
 
