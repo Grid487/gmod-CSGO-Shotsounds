@@ -25,7 +25,7 @@ if (SERVER) then
 	end
 	
 	function CSGO_S_NPC_COMBINE_BODYSHOT( ent , hitgroup , dmginfo )
-		if not IsValid( ent ) then return end
+		if not IsValid( ent ) or ent:IsPlayer() == true then return end
 		
 		local attacker					=	dmginfo:GetAttacker()
 		local plyangle					=	attacker:GetAngles()
@@ -66,6 +66,8 @@ if (SERVER) then
 	end
 
 	function CSGO_S_ON_NPC_KILL_HEADSHOT( target , hitgroup , dmginfo )
+
+		if target:IsPlayer() == true then return end
 		
 		local attacker				=	dmginfo:GetAttacker()
 		
@@ -195,14 +197,13 @@ if (SERVER) then
 		hook.Add( "ScaleNPCDamage" , "CSGO_S_On_Npc_Kill_Headshot" , CSGO_S_ON_NPC_KILL_HEADSHOT )	
 		hook.Add( "ScalePlayerDamage" , "CSGO_S_Player_Shots" , CSGO_S_PLAYER_SHOTS )	
 		
-		print("csgo headshots loaded")
+		print("csgo headshots loaded ogey")
 		
 	end
 
 	timer.Simple( 1 , CSGO_S_HOOKS )
 
 end
-
 
 
 
